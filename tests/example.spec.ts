@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('test login', async ({ page }) => {
+  
   await page.goto('https://dataagent-demo.head.dataagent-staging.by-fw.jp/');
 
   // Click the get started link.
@@ -13,8 +14,8 @@ test('test login', async ({ page }) => {
   const username = page.locator('#username');
   const password = page.locator('#password');
   const submitButton = page.locator('button[type="submit"]');
-  await username.fill(''); // just sample, will not commit this to repo
-  await password.fill(''); // just sample, will not commit this to repo
+  await username.fill(process.env.TEST_USER_ID || '');
+  await password.fill(process.env.TEST_USER_PASSWORD || ''); 
   await submitButton.click();
 
   // Check login success by checking the welcome message
