@@ -24,15 +24,20 @@ jobs:
         TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
         PLAYWRIGHT_JSON_OUTPUT_NAME: results.json
       run: pnpm exec playwright test --reporter=html,json --grep @snapshot
-    - name: Post Summary to PR
-      uses: daun/playwright-report-summary@v3
+    - name: Post Report Link to PR
       if: always()
+      uses: thollander/actions-comment-pull-request@v2
       with:
-        report-file: results.json
-        custom-info: "If the test failed, you can click on the summary on the top left corner in the action's details to download the artifact to view the full HTML report. See details [here](https://playwright.dev/docs/ci-intro#html-report)."
-    - uses: actions/upload-artifact@v4
+        message: |
+          ### 🎭 Playwright Test Results
+          ✅ **Report:** https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr-${{ github.event.number }}/
+          | Status | Total | Passed | Failed | Flaky |
+          |-------|-------|--------|--------|-------|
+          | See report for details | ${{ github.run_id }} | -- | -- | -- |
+    - name: Deploy Report to GitHub Pages
       if: always()
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./playwright-report
+        destination_dir: pr-${{ github.event.number }} # Unique folder per PR
