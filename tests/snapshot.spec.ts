@@ -19,5 +19,5 @@ test('test login: snapshot',{tag:'@snapshot'}, async ({ page }) => {
 
   // Check login success by checking the welcome message
   await page.getByRole('main').waitFor({ state: 'visible' }); // wait for the page to load after login
-  await expect(page).toHaveScreenshot(); // compare the screenshot with the baseline
+  await expect(page).toHaveScreenshot(); // compare the screenshot with the baseline image
 });

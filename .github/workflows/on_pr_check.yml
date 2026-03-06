@@ -1,0 +1,37 @@
+name: On PR Playwright Tests
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write # Required to post comments
+      contents: write      # Required if uploading to GH Pages
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: Install dependencies
+      run: npm install -g pnpm && pnpm install
+    - name: Install Playwright Browsers
+      run: pnpm exec playwright install --with-deps
+    - name: Run Playwright tests
+      env:
+        TEST_USER_ID: ${{ secrets.TEST_USER_ID }}
+        TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+        PLAYWRIGHT_JSON_OUTPUT_NAME: results.json
+      run: pnpm exec playwright test --reporter=html,json
+    - name: Post Summary to PR
+      uses: daun/playwright-report-summary@v3
+      if: always()
+      with:
+        report-file: results.json
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
