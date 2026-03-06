@@ -31,8 +31,10 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./playwright-report
         destination_dir: pr-${{ github.event.number }}
-        keep_files: true # CRITICAL: Prevents new PRs from deleting old PR reports
-
+        # Optional: keeps previous reports if you want to organize by PR/Date
+        keep_files: true 
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
     - name: Post Comment to PR
       if: always()
       uses: thollander/actions-comment-pull-request@v2
