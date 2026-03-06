@@ -3,12 +3,19 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "pw-test": "playwright test",
+    "pw-test:report": "playwright show-report",
+    "pw-test:ui": "playwright test --ui", 
+    "pw-test:update": "playwright test --update-snapshots",
+    "pw-test:tag": "playwright test --grep"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.58.2",
-    "@types/node": "^25.3.3"
+    "@types/node": "^25.3.3",
+    "dotenv": "^17.2.2"
   }
 }

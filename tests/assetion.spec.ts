@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('test login', async ({ page }) => {
-  
+test('test login', {tag:'@assertion'},async ({ page }) => {  
   await page.goto('https://dataagent-demo.head.dataagent-staging.by-fw.jp/');
 
   // Click the get started link.
@@ -19,6 +18,14 @@ test('test login', async ({ page }) => {
   await submitButton.click();
 
   // Check login success by checking the welcome message
-  const welcomeMsg = page.locator('text=データを使い倒せ');
-  await expect(welcomeMsg).toBeVisible();
+  // You can either use a aria snapshot or check the presence of a specific element
+  // Aria is generally more robust to changes in the UI, since you can customize how specific the check is
+  await expect(page.getByRole('main')).toMatchAriaSnapshot(`
+    - main:
+      - heading "データを使い倒せ" [level=3]
+      - list
+      - textbox 
+      - button "送信する"
+      - paragraph
+    `);
 });

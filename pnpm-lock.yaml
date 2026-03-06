@@ -11,6 +11,9 @@ devDependencies:
   '@types/node':
     specifier: ^25.3.3
     version: 25.3.3
+  dotenv:
+    specifier: ^17.2.2
+    version: 17.3.1
 
 packages:
 
@@ -26,6 +29,11 @@ packages:
     resolution: {integrity: sha512-DpzbrH7wIcBaJibpKo9nnSQL0MTRdnWttGyE5haGwK86xgMOkFLp7vEyfQPGLOJh5wNYiJ3V9PmUMDhV9u8kkQ==}
     dependencies:
       undici-types: 7.18.2
+    dev: true
+
+  /dotenv@17.3.1:
+    resolution: {integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==}
+    engines: {node: '>=12'}
     dev: true
 
   /fsevents@2.3.2:
