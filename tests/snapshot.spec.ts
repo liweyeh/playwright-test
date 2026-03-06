@@ -21,6 +21,6 @@ test('test login: snapshot',{tag:'@snapshot'}, async ({ page }) => {
   await page.getByRole('main').waitFor({ state: 'visible' }); // wait for the page to load after login
   await page
     .getByPlaceholder('質問を入力してください。Ctrl / Command + Enter で送信できます。')
-    .fill('playwright@microsoft.com'); // fill to intentionally fail snapshot test
+    .fill('playwrights@microsoft.com'); // fill to intentionally fail snapshot test
   await expect(page).toHaveScreenshot(); // compare the screenshot with the baseline image
 });
