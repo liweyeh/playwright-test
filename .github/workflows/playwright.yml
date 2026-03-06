@@ -2,7 +2,7 @@ name: Playwright Tests
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *' # Runs daily at midnight remember to turn it off
+    - cron: '17 1 * * *' # Runs daily at 10:15 AM JST (1:15 AM UTC) odd time to avoid peak hours
 jobs:
   test:
     timeout-minutes: 60
