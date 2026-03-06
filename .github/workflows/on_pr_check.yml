@@ -23,12 +23,13 @@ jobs:
         TEST_USER_ID: ${{ secrets.TEST_USER_ID }}
         TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
         PLAYWRIGHT_JSON_OUTPUT_NAME: results.json
-      run: pnpm exec playwright test --reporter=html,json
+      run: pnpm exec playwright test --reporter=html,json --grep @snapshot
     - name: Post Summary to PR
       uses: daun/playwright-report-summary@v3
       if: always()
       with:
         report-file: results.json
+        custom-info: 'If the test failed, you can click on the summary on the top left corner in the action's details to download the artifact to view the full HTML report. See details [here](https://playwright.dev/docs/ci-intro#html-report).'
     - uses: actions/upload-artifact@v4
       if: always()
       with:
