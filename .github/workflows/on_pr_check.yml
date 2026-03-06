@@ -29,7 +29,7 @@ jobs:
       if: always()
       with:
         report-file: results.json
-        custom-info: 'If the test failed, you can click on the summary on the top left corner in the action's details to download the artifact to view the full HTML report. See details [here](https://playwright.dev/docs/ci-intro#html-report).'
+        custom-info: "If the test failed, you can click on the summary on the top left corner in the action's details to download the artifact to view the full HTML report. See details [here](https://playwright.dev/docs/ci-intro#html-report)."
     - uses: actions/upload-artifact@v4
       if: always()
       with:
