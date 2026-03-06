@@ -1,43 +1,54 @@
-name: On PR Playwright Tests
+name: Playwright Tests
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
+
+permissions:
+  contents: write
+  pull-requests: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write # Required to post comments
-      contents: write      # Required if uploading to GH Pages
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm install -g pnpm && pnpm install
-    - name: Install Playwright Browsers
-      run: pnpm exec playwright install --with-deps
-    - name: Run Playwright tests
-      env:
-        TEST_USER_ID: ${{ secrets.TEST_USER_ID }}
-        TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
-        PLAYWRIGHT_JSON_OUTPUT_NAME: results.json
-      run: pnpm exec playwright test --reporter=html,json --grep @snapshot
-    - name: Post Report Link to PR
-      if: always()
-      uses: thollander/actions-comment-pull-request@v2
-      with:
-        message: |
-          ### 🎭 Playwright Test Results
-          ✅ **Report:** https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr-${{ github.event.number }}/
-          | Status | Total | Passed | Failed | Flaky |
-          |-------|-------|--------|--------|-------|
-          | See report for details | ${{ github.run_id }} | -- | -- | -- |
-    - name: Deploy Report to GitHub Pages
-      if: always()
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./playwright-report
-        destination_dir: pr-${{ github.event.number }} # Unique folder per PR
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: npx playwright test --reporter=html,json
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_NAME: results.json
+
+      # This publishes to the 'gh-pages' branch in a subfolder like /pr-12/
+      - name: Deploy to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./playwright-report
+          destination_dir: pr-${{ github.event.number }}
+          keep_files: true # CRITICAL: Prevents new PRs from deleting old PR reports
+
+      - name: Post Comment to PR
+        if: always()
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            ### 🎭 Playwright Test Report
+            🚀 View the live report here:
+            https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr-${{ github.event.number }}/
+          comment_tag: playwright_report
