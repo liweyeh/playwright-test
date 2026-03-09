@@ -81,8 +81,10 @@ using Playwright and GitHub Actions.
   Runs @visual tagged tests, posts test summary to PR,
   deploys HTML report to GitHub Pages,
   and adds a comment with the live report link.
-  - **on_pr_merge.yml**:  Automated workflow triggered when a PR is merged into main.
-  Runs `pnpm pw-test:update-visual`, commits and pushes updated snapshot images back to the repository.
+  - **on_pr_merge.yml**: Automated workflow triggered on push to main branch
+  (including merged PRs).
+  Runs `pnpm pw-test:update-visual` to update visual snapshots with `@visual` tag,
+  automatically commits and pushes updated snapshot images back to main using git-auto-commit-action.
 
 ## pnpm Commands
 
@@ -113,12 +115,18 @@ which runs all tests on a daily basis against CDA (PPE).
 
 ### Automatic Visual Snapshot Updates
 
-The **Update Visual Snapshots** workflow automatically runs when a PR is merged into main:
+The **Update Visual Snapshots** (`on_pr_merge.yml`) workflow automatically runs
+when changes are pushed to the main branch:
 
-1. Detects when a PR is successfully merged
+1. Triggers on any push to main (including merged PRs)
 2. Checks out the main branch
-3. Runs `pnpm pw-test:update-visual` to update all visual snapshots
-4. Commits and pushes any updated snapshot images back to main
-5. Uploads test reports as artifacts for review
+3. Runs `pnpm pw-test:update-visual` to regenerate visual snapshots for
+tests tagged with `@visual`
+4. Automatically commits and pushes any updated snapshot images back to main
+(using `[skip ci]` to prevent recursive triggers)
+5. Uploads test reports as artifacts for 7 days
 
-This ensures that visual snapshots are always up-to-date after merging changes.
+This ensures that visual snapshots stay
+synchronized with the latest UI changes after merging updates.
+
+Here is the generated [commit](https://github.com/liweyeh/playwright-test/commit/54c26e7e9aa457a85542d12ac00586994680556f)
