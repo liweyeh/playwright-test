@@ -1,6 +1,7 @@
 # Playwright Test Sample
 
-This is PoC for implementing automated testing for frontend project using Playwright and Github Actions
+This is a PoC for implementing automated testing for frontend projects
+using Playwright and GitHub Actions.
 
 ## Start-up Guide
 
@@ -21,7 +22,6 @@ This is PoC for implementing automated testing for frontend project using Playwr
 
    ```sh
    pnpm pw-test
-   
    ```
 
 4. Open the HTML report after a run:
@@ -32,6 +32,7 @@ This is PoC for implementing automated testing for frontend project using Playwr
 
 ## File Structure
 
+```yml
 .
 ├─ .env
 ├─ package.json
@@ -40,9 +41,10 @@ This is PoC for implementing automated testing for frontend project using Playwr
 ├─ playwright-report/
 ├─ test-results/
 └─ tests/
-   ├─ assetion.spec.ts
+   ├─ assertion.spec.ts
    ├─ snapshot.spec.ts
    └─ snapshot.spec.ts-snapshots/
+```
 
 ## What Each File/Folder Does
 
@@ -52,14 +54,21 @@ This is PoC for implementing automated testing for frontend project using Playwr
   - Playwright test configuration (projects, reporters, retries, etc.).
 - tests/
   - Test specs for Playwright.
-  - assetion.spec.ts: an assertion-based login test using ARIA snapshots.
-  - snapshot.spec.ts:
-    a screenshot snapshot test (intentionally set up to fail by inputting text).
-  - snapshot.spec.ts-snapshots/: baseline images for snapshot comparisons.
+  - assertion.spec.ts: An assertion-based login test using ARIA snapshots.
+  - snapshot.spec.ts: A screenshot snapshot test (intentionally set up to fail by inputting text).
+  - snapshot.spec.ts-snapshots/: Baseline images for snapshot comparisons.
 - playwright-report/
   - Generated HTML report output after test runs.
 - test-results/
   - Raw artifacts from test runs (traces, screenshots, snapshots).
+- .github/workflows/
+  - **daily_check.yml**: Automated workflow that runs all Playwright tests daily
+  at 10:15 AM JST (1:15 AM UTC). Uploads test reports as artifacts with 30-day retention.
+  Can also be triggered manually.
+  - **on_pr_check.yml**: Automated workflow triggered on pull requests to main branch.
+  Runs @snapshot tagged tests, posts test summary to PR,
+  deploys HTML report to GitHub Pages,
+  and adds a comment with the live report link.
 
 ## pnpm Commands
 
@@ -74,3 +83,16 @@ This is PoC for implementing automated testing for frontend project using Playwr
 - pnpm pw-test:tag {tags}
   - Runs tests matching a tag using Playwright grep.
   - Example: pnpm pw-test:tag @snapshot
+
+## Samples
+
+### PR
+
+In the PR page of this repo, you can find a [failed PR](https://github.com/liweyeh/playwright-test/pull/9),
+which demonstrates how automated tests can catch unexpected changes
+and what information they provide for developers to debug.
+
+### GitHub Actions
+
+In the Actions page, you can find a workflow called `Daily Playwright Tests`,
+which runs all tests on a daily basis against CDA (PPE).
