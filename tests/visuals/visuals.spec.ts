@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('test login: snapshot',{tag:'@snapshot'}, async ({ page }) => {  
+test('test login: snapshot',{tag:'@visuals'}, async ({ page }) => {  
   await page.goto('https://dataagent-demo.head.dataagent-staging.by-fw.jp/');
 
   // Click the get started link.
