@@ -42,7 +42,8 @@ using Playwright and GitHub Actions.
 ├─ .github/
 │  └─ workflows/
 │     ├─ daily_check.yml
-│     └─ on_pr_check.yml
+│     ├─ on_pr_check.yml
+│     └─ on_pr_merge.yml
 ├─ playwright-report/
 ├─ test-results/
 └─ tests/
@@ -80,6 +81,8 @@ using Playwright and GitHub Actions.
   Runs @visual tagged tests, posts test summary to PR,
   deploys HTML report to GitHub Pages,
   and adds a comment with the live report link.
+  - **on_pr_merge.yml**:  Automated workflow triggered when a PR is merged into main.
+  Runs `pnpm pw-test:update-visual`, commits and pushes updated snapshot images back to the repository.
 
 ## pnpm Commands
 
@@ -107,3 +110,15 @@ and what information they provide for developers to debug.
 
 In the Actions page, you can find a workflow called `Daily Playwright Tests`,
 which runs all tests on a daily basis against CDA (PPE).
+
+### Automatic Visual Snapshot Updates
+
+The **Update Visual Snapshots** workflow automatically runs when a PR is merged into main:
+
+1. Detects when a PR is successfully merged
+2. Checks out the main branch
+3. Runs `pnpm pw-test:update-visual` to update all visual snapshots
+4. Commits and pushes any updated snapshot images back to main
+5. Uploads test reports as artifacts for review
+
+This ensures that visual snapshots are always up-to-date after merging changes.
