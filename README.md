@@ -115,18 +115,7 @@ which runs all tests on a daily basis against CDA (PPE).
 
 ### Automatic Visual Snapshot Updates
 
-The **Update Visual Snapshots** (`on_pr_merge.yml`) workflow automatically runs
-when changes are pushed to the main branch:
-
-1. Triggers on any push to main (including merged PRs)
-2. Checks out the main branch
-3. Runs `pnpm pw-test:update-visual` to regenerate visual snapshots for
-tests tagged with `@visual`
-4. Automatically commits and pushes any updated snapshot images back to main
-(using `[skip ci]` to prevent recursive triggers)
-5. Uploads test reports as artifacts for 7 days
-
-This ensures that visual snapshots stay
-synchronized with the latest UI changes after merging updates.
+The `Update Visual Snapshots` (`on_pr_merge.yml`) workflow automatically runs
+when changes are pushed to the main branch. This will update the visual snapshot and make sure snapshot on main is always fresh.
 
 Here is the generated [commit](https://github.com/liweyeh/playwright-test/commit/54c26e7e9aa457a85542d12ac00586994680556f)
