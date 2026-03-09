@@ -7,7 +7,7 @@
     "pw-test": "playwright test",
     "pw-test:report": "playwright show-report",
     "pw-test:ui": "playwright test --ui", 
-    "pw-test:update": "playwright test --update-snapshots",
+    "pw-test:update-visual": "playwright test tests/visuals --update-snapshots",
     "pw-test:tag": "playwright test --grep"
   },
   "keywords": [],
