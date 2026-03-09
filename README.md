@@ -35,17 +35,22 @@ using Playwright and GitHub Actions.
 ```yml
 .
 ├─ .env
+├─ .gitignore
 ├─ package.json
 ├─ pnpm-lock.yaml
 ├─ playwright.config.ts
+├─ .github/
+│  └─ workflows/
+│     ├─ daily_check.yml
+│     └─ on_pr_check.yml
 ├─ playwright-report/
 ├─ test-results/
 └─ tests/
-  ├─ assertions/
-  │  └─ assetion.spec.ts
-  └─ visuals/
-    ├─ snapshot.spec.ts
-    └─ snapshot.spec.ts-snapshots/
+   ├─ assertions/
+   │  └─ assetion.spec.ts
+   └─ visuals/
+      ├─ visuals.spec.ts
+      └─ visuals.spec.ts-snapshots/
 ```
 
 ## What Each File/Folder Does
@@ -56,9 +61,13 @@ using Playwright and GitHub Actions.
   - Playwright test configuration (projects, reporters, retries, etc.).
 - tests/
   - Test specs for Playwright.
-  - assertions/assetion.spec.ts: A login test tagged with `@assertion` using an ARIA snapshot to verify the page structure.
-  - visuals/snapshot.spec.ts: A visual regression test tagged with `@snapshot` that compares a screenshot with the baseline image.
-  - visuals/snapshot.spec.ts-snapshots/: Baseline images for visual snapshot comparisons.
+  - assertions/assetion.spec.ts:
+  A login test tagged with `@assertion`
+  using an ARIA snapshot to verify the page structure.
+  - visuals/visuals.spec.ts:
+  A visual regression test tagged with `@visual`
+  that compares a screenshot with the baseline image.
+  - visuals/visuals.spec.ts-snapshots/: Baseline images for visual snapshot comparisons.
 - playwright-report/
   - Generated HTML report output after test runs.
 - test-results/
@@ -68,7 +77,7 @@ using Playwright and GitHub Actions.
   at 10:15 AM JST (1:15 AM UTC). Uploads test reports as artifacts with 30-day retention.
   Can also be triggered manually.
   - **on_pr_check.yml**: Automated workflow triggered on pull requests to main branch.
-  Runs @snapshot tagged tests, posts test summary to PR,
+  Runs @visual tagged tests, posts test summary to PR,
   deploys HTML report to GitHub Pages,
   and adds a comment with the live report link.
 
@@ -81,10 +90,10 @@ using Playwright and GitHub Actions.
 - pnpm pw-test:ui
   - Launches Playwright Test UI for interactive test runs.
 - pnpm pw-test:update-visual
-  - Updates visual snapshot baselines for tests under `tests/visuals`.
+  - Updates visual snapshot baselines for tests tagged with `@visual`.
 - pnpm pw-test:tag {tags}
   - Runs tests matching a tag using Playwright grep.
-  - Example: pnpm pw-test:tag @snapshot
+  - Example: pnpm pw-test:tag @visual or pnpm pw-test:tag @assertion
 
 ## Samples
 

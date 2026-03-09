@@ -24,7 +24,7 @@ jobs:
         TEST_USER_ID: ${{ secrets.TEST_USER_ID }}
         TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
         PLAYWRIGHT_JSON_OUTPUT_NAME: results.json
-      run: pnpm exec playwright test --reporter=html,json --grep @snapshot
+      run: pnpm exec playwright test --reporter=html,json --grep @visual
     - name: Post Summary to PR
       uses: daun/playwright-report-summary@v3
       if: always()
