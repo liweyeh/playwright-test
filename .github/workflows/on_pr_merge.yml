@@ -1,6 +1,5 @@
 name: Update Visual Snapshots
 on:
-  workflow_dispatch:
   pull_request:
     types:
       - closed
@@ -10,7 +9,7 @@ jobs:
     timeout-minutes: 60
     runs-on: macos-latest
     permissions:
-      contents: write # Required to push changes
+      contents: write
     steps:
       - uses: actions/checkout@v5
         with:
@@ -33,19 +32,10 @@ jobs:
           TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
         run: pnpm pw-test:update-visual
 
-      - name: Check for changes
-        id: git-check
-        run: |
-          git diff --exit-code tests/ || echo "changes=true" >> $GITHUB_OUTPUT
-
-      - name: Commit and Push Updated Snapshots
-        if: steps.git-check.outputs.changes == 'true'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add tests/
-          git commit -m "chore: update visual snapshots [skip ci]"
-          git push
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update playwright snapshots [skip ci]"
 
       - name: Upload Report
         uses: actions/upload-artifact@v4
@@ -54,7 +44,3 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
-
-      - name: No Changes Detected
-        if: steps.git-check.outputs.changes != 'true'
-        run: echo "No snapshot changes detected"
