@@ -5,7 +5,6 @@ on:
       - main
 jobs:
   update-snapshots:
-    if: github.event.pull_request.merged == true
     timeout-minutes: 60
     runs-on: macos-latest
     permissions:
